@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Crown Eve Bikes — Ride The Legacy</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --orange:#FF4D00;
+  --orange-light:#FF6B2B;
+  --orange-glow:rgba(255,77,0,0.18);
+  --black:#0A0A0A;
+  --black2:#111111;
+  --black3:#1A1A1A;
+  --gray:#2A2A2A;
+  --gray2:#3D3D3D;
+  --muted:#888;
+  --white:#F5F5F0;
+  --white2:#BDBDB8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;overflow-x:hidden;cursor:none}
+
+/* CUSTOM CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--orange);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s;mix-blend-mode:difference}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--orange);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .18s ease;opacity:0.6}
+body:hover #cursor{opacity:1}
+
+/* NOISE TEXTURE OVERLAY */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");opacity:0.35;pointer-events:none;z-index:1;mix-blend-mode:overlay}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--orange)}
+
+/* ── NAVBAR ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all .4s}
+nav.scrolled{background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,77,0,0.12)}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-icon{width:42px;height:42px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:1px;position:relative}
+.logo-icon::after{content:'';position:absolute;inset:3px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:var(--black)}
+.logo-icon span{position:relative;z-index:1;font-size:14px;font-weight:900;color:var(--orange)}
+.logo-text{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:3px;color:var(--white);text-transform:uppercase}
+.logo-text em{color:var(--orange);font-style:normal}
+.nav-links{display:flex;align-items:center;gap:36px;list-style:none}
+.nav-links a{color:var(--white2);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;position:relative;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--orange);transition:width .3s}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:16px}
+.btn-nav-login{padding:10px 28px;border:1.5px solid var(--orange);color:var(--orange);background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;text-decoration:none;transition:all .3s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
+.btn-nav-login:hover{background:var(--orange);color:#fff}
+.btn-nav-register{padding:10px 28px;background:var(--orange);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;text-decoration:none;transition:all .3s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
+.btn-nav-register:hover{background:var(--orange-light);transform:translateY(-1px)}
+
+/* ── HERO ── */
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 5vw;padding-top:72px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 70% 50%,rgba(255,77,0,0.08) 0%,transparent 70%);pointer-events:none}
+.hero-lines{position:absolute;right:0;top:0;bottom:0;width:55%;pointer-events:none;overflow:hidden}
+.hero-lines::before{content:'';position:absolute;top:20%;right:10%;width:1px;height:60%;background:linear-gradient(to bottom,transparent,rgba(255,77,0,0.3),transparent)}
+.hero-lines::after{content:'';position:absolute;top:30%;right:20%;width:1px;height:40%;background:linear-gradient(to bottom,transparent,rgba(255,77,0,0.15),transparent)}
+.hero-number{position:absolute;left:5vw;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:22vw;color:rgba(255,77,0,0.04);line-height:1;pointer-events:none;user-select:none;letter-spacing:-2px}
+.hero-content{position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid rgba(255,77,0,0.4);margin-bottom:28px;opacity:0;animation:fadeUp .8s .2s forwards}
+.hero-badge span{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange)}
+.hero-badge-dot{width:6px;height:6px;background:var(--orange);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+h1.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,9vw,140px);line-height:0.9;letter-spacing:-2px;margin-bottom:24px;opacity:0;animation:fadeUp .8s .4s forwards}
+h1.hero-title .line2{color:var(--orange);-webkit-text-stroke:0px;display:block}
+h1.hero-title .line3{display:block;-webkit-text-stroke:1px rgba(245,245,240,0.3);color:transparent}
+.hero-sub{font-size:15px;font-weight:300;color:var(--white2);line-height:1.8;max-width:400px;margin-bottom:44px;opacity:0;animation:fadeUp .8s .6s forwards}
+.hero-ctas{display:flex;align-items:center;gap:20px;opacity:0;animation:fadeUp .8s .8s forwards}
+.btn-primary{display:inline-flex;align-items:center;gap:12px;padding:16px 40px;background:var(--orange);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:none;transition:all .3s;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;inset:0;background:var(--orange-light);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.btn-primary:hover::before{transform:scaleX(1)}
+.btn-primary span{position:relative;z-index:1}
+.btn-primary .arrow{font-size:18px;transition:transform .3s}
+.btn-primary:hover .arrow{transform:translateX(6px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;color:var(--white2);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:none;transition:color .3s}
+.btn-ghost:hover{color:var(--white)}
+.btn-ghost-line{width:32px;height:1px;background:var(--white2);transition:all .3s}
+.btn-ghost:hover .btn-ghost-line{width:48px;background:var(--orange)}
+.hero-stats{display:flex;gap:44px;margin-top:64px;padding-top:44px;border-top:1px solid rgba(255,255,255,0.08);opacity:0;animation:fadeUp .8s 1s forwards}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--orange);line-height:1}
+.stat-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.hero-visual{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:580px;opacity:0;animation:fadeIn 1.2s .3s forwards}
+.bike-showcase{position:relative;width:100%;max-width:600px}
+.bike-glow{position:absolute;inset:-20%;background:radial-gradient(ellipse at center,rgba(255,77,0,0.2) 0%,transparent 65%);pointer-events:none;animation:glowPulse 4s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+.bike-img-placeholder{width:100%;aspect-ratio:16/10;background:linear-gradient(135deg,var(--gray) 0%,var(--black3) 100%);border:1px solid rgba(255,77,0,0.15);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:4px;color:var(--muted);position:relative;overflow:hidden}
+.bike-img-placeholder::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,77,0,0.05))}
+.bike-tag{position:absolute;background:rgba(10,10,10,0.9);border:1px solid rgba(255,77,0,0.3);padding:10px 16px;font-size:11px;font-weight:600;letter-spacing:1px;white-space:nowrap}
+.bike-tag.t1{top:15%;right:-5%;animation:float1 3s ease-in-out infinite}
+.bike-tag.t2{bottom:25%;left:-8%;animation:float2 3.5s ease-in-out infinite}
+.bike-tag.t3{bottom:10%;right:10%;animation:float1 4s ease-in-out infinite}
+.bike-tag-dot{display:inline-block;width:6px;height:6px;background:var(--orange);border-radius:50%;margin-right:8px}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.scroll-indicator{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeIn 1s 1.4s forwards}
+.scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,var(--orange),transparent);animation:scrollAnim 2s ease-in-out infinite}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.scroll-text{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+
+/* ── MARQUEE ── */
+.marquee-section{padding:20px 0;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);overflow:hidden;background:var(--black2)}
+.marquee-track{display:flex;gap:0;white-space:nowrap;animation:marquee 20s linear infinite}
+.marquee-item{display:inline-flex;align-items:center;gap:20px;padding:0 32px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:4px;color:var(--muted)}
+.marquee-item.highlight{color:var(--orange)}
+.marquee-sep{color:var(--orange);font-size:20px;line-height:1}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── SECTION BASE ── */
+section{padding:120px 5vw;position:relative}
+.section-label{display:inline-flex;align-items:center;gap:12px;margin-bottom:20px}
+.section-label-line{width:40px;height:1px;background:var(--orange)}
+.section-label span{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange)}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,90px);line-height:0.92;letter-spacing:-1px;margin-bottom:24px}
+.section-sub{font-size:15px;font-weight:300;color:var(--white2);max-width:520px;line-height:1.8}
+
+/* ── FEATURES SECTION ── */
+#features{background:var(--black)}
+.features-grid{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:1px;margin-top:80px;background:rgba(255,255,255,0.06)}
+.feature-card{background:var(--black);padding:48px 36px;position:relative;overflow:hidden;transition:background .3s;cursor:none}
+.feature-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--orange);transform:scaleX(0);transition:transform .4s}
+.feature-card:hover{background:var(--black3)}
+.feature-card:hover::before{transform:scaleX(1)}
+.feature-card.featured{background:var(--orange);grid-row:span 1}
+.feature-card.featured .feature-num{color:rgba(255,255,255,0.3)}
+.feature-card.featured .feature-title{color:#fff}
+.feature-card.featured .feature-desc{color:rgba(255,255,255,0.75)}
+.feature-card.featured::before{display:none}
+.feature-num{font-family:'Bebas Neue',sans-serif;font-size:60px;color:rgba(255,255,255,0.05);line-height:1;margin-bottom:20px;transition:color .3s}
+.feature-card:hover .feature-num{color:rgba(255,77,0,0.15)}
+.feature-icon{width:48px;height:48px;border:1px solid rgba(255,77,0,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:20px;transition:all .3s}
+.feature-card:hover .feature-icon{border-color:var(--orange);background:var(--orange-glow)}
+.feature-title{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;letter-spacing:1px;margin-bottom:12px;color:var(--white)}
+.feature-desc{font-size:14px;font-weight:300;color:var(--white2);line-height:1.7}
+
+/* ── PRODUCTS SECTION ── */
+#products{background:var(--black2)}
+.products-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:60px}
+.view-all{display:inline-flex;align-items:center;gap:10px;color:var(--orange);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:gap .3s;cursor:none}
+.view-all:hover{gap:16px}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.product-card{background:var(--black);position:relative;overflow:hidden;cursor:none;group:true}
+.product-card-img{aspect-ratio:4/3;background:var(--black3);display:flex;align-items:center;justify-content:center;font-size:12px;letter-spacing:2px;color:var(--muted);position:relative;overflow:hidden;transition:transform .6s}
+.product-card:hover .product-card-img{transform:scale(1.04)}
+.product-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,0.9) 0%,transparent 50%);opacity:0;transition:opacity .4s}
+.product-card:hover .product-card-overlay{opacity:1}
+.product-card-quick{position:absolute;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--orange);color:#fff;padding:10px 28px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;white-space:nowrap;opacity:0;transition:all .4s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+.product-card:hover .product-card-quick{opacity:1;transform:translateX(-50%) translateY(0)}
+.product-card-body{padding:24px 20px;border-top:1px solid rgba(255,255,255,0.06)}
+.product-cat{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.product-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.product-price-row{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+.product-price{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);letter-spacing:1px}
+.product-badge{background:rgba(255,77,0,0.12);color:var(--orange);font-size:10px;font-weight:700;padding:4px 10px;letter-spacing:1px;text-transform:uppercase}
+
+/* ── SERVICES SECTION ── */
+#services{background:var(--black)}
+.services-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:80px}
+.services-list{display:flex;flex-direction:column;gap:0}
+.service-item{padding:28px 0;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;cursor:none;transition:all .3s}
+.service-item:hover{padding-left:16px}
+.service-item:hover .service-item-icon{color:var(--orange);transform:rotate(45deg)}
+.service-item-left{display:flex;align-items:center;gap:20px}
+.service-item-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted)}
+.service-item-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px}
+.service-item-price{font-size:13px;color:var(--orange);font-weight:600}
+.service-item-icon{font-size:18px;color:var(--gray2);transition:all .3s}
+.services-cta-panel{background:var(--black3);border:1px solid rgba(255,77,0,0.15);padding:48px;position:relative;overflow:hidden}
+.services-cta-panel::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,77,0,0.15),transparent 70%);pointer-events:none}
+.services-cta-panel h3{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:0.9;margin-bottom:20px}
+.services-cta-panel p{font-size:14px;color:var(--white2);line-height:1.8;margin-bottom:36px}
+
+/* ── BOOKING SECTION ── */
+#booking{background:var(--orange);position:relative;overflow:hidden}
+#booking::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.booking-inner{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.booking-text h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,7vw,100px);line-height:0.9;color:#000;letter-spacing:-2px}
+.booking-text p{font-size:16px;color:rgba(0,0,0,0.6);margin-top:16px;max-width:420px;line-height:1.7}
+.btn-booking{display:inline-flex;align-items:center;gap:16px;padding:20px 52px;background:#000;color:var(--orange);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;cursor:none;transition:all .3s;flex-shrink:0}
+.btn-booking:hover{background:var(--black2);transform:translateY(-2px)}
+
+/* ── TESTIMONIALS ── */
+#testimonials{background:var(--black2)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:80px}
+.testimonial-card{background:var(--black);padding:40px 32px;border-top:2px solid transparent;transition:border-color .3s}
+.testimonial-card:hover{border-top-color:var(--orange)}
+.stars{color:var(--orange);font-size:14px;letter-spacing:4px;margin-bottom:20px}
+.testimonial-text{font-size:15px;font-weight:300;color:var(--white2);line-height:1.8;margin-bottom:28px;font-style:italic}
+.testimonial-author{display:flex;align-items:center;gap:14px}
+.author-avatar{width:44px;height:44px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#fff}
+.author-name{font-size:14px;font-weight:600;letter-spacing:.5px}
+.author-role{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ── FOOTER ── */
+footer{background:var(--black2);border-top:1px solid rgba(255,255,255,0.06)}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;padding:80px 5vw 60px}
+.footer-brand p{font-size:14px;color:var(--white2);line-height:1.8;margin-top:20px;max-width:300px}
+.footer-socials{display:flex;gap:12px;margin-top:28px}
+.social-link{width:38px;height:38px;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);text-decoration:none;transition:all .3s;cursor:none}
+.social-link:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-glow)}
+.footer-col h4{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;color:var(--white)}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.footer-col ul li a{color:var(--white2);text-decoration:none;font-size:13px;transition:color .3s;cursor:none}
+.footer-col ul li a:hover{color:var(--orange)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding:24px 5vw;display:flex;align-items:center;justify-content:space-between}
+.footer-bottom p{font-size:12px;color:var(--muted)}
+.footer-bottom span{color:var(--orange)}
+
+/* ── LOGIN PAGE ── */
+#page-login{display:none;min-height:100vh;background:var(--black);align-items:center;justify-content:center;position:relative;overflow:hidden}
+#page-login.active{display:flex}
+#page-login::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 80% 50%,rgba(255,77,0,0.07),transparent)}
+.login-card{width:100%;max-width:480px;background:var(--black3);border:1px solid rgba(255,77,0,0.2);padding:56px 48px;position:relative;z-index:2}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--orange),transparent)}
+.login-card h2{font-family:'Bebas Neue',sans-serif;font-size:52px;margin-bottom:6px;letter-spacing:-1px}
+.login-card p{font-size:13px;color:var(--white2);margin-bottom:40px}
+.form-group{margin-bottom:24px}
+.form-group label{display:block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.form-group input,.form-group select{width:100%;background:var(--black);border:1px solid rgba(255,255,255,0.1);color:var(--white);padding:14px 18px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .3s;cursor:none;-webkit-appearance:none}
+.form-group input:focus,.form-group select:focus{border-color:var(--orange)}
+.form-group select option{background:var(--black)}
+.form-submit{width:100%;padding:16px;background:var(--orange);color:#fff;border:none;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:background .3s;margin-top:12px}
+.form-submit:hover{background:var(--orange-light)}
+.form-divider{text-align:center;margin:20px 0;color:var(--muted);font-size:12px}
+.form-link{color:var(--orange);text-decoration:none;font-size:13px;cursor:none}
+.role-info{background:rgba(255,77,0,0.08);border:1px solid rgba(255,77,0,0.2);padding:14px 18px;margin-bottom:28px;font-size:12px;color:var(--white2);line-height:1.6}
+.role-info strong{color:var(--orange)}
+
+/* ── REGISTER PAGE ── */
+#page-register{display:none;min-height:100vh;background:var(--black);align-items:center;justify-content:center;padding:80px 5vw;position:relative}
+#page-register.active{display:flex}
+#page-register::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 20% 50%,rgba(255,77,0,0.07),transparent)}
+.register-card{width:100%;max-width:600px;background:var(--black3);border:1px solid rgba(255,77,0,0.2);padding:56px 48px;position:relative;z-index:2}
+.register-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--orange),transparent)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+/* ── SHOP PAGE ── */
+#page-shop{display:none;padding-top:72px}
+#page-shop.active{display:block}
+.shop-hero{background:var(--black2);padding:60px 5vw 50px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.shop-hero h1{font-family:'Bebas Neue',sans-serif;font-size:80px;letter-spacing:-2px;line-height:0.9}
+.shop-hero h1 span{color:var(--orange)}
+.shop-filters{display:flex;align-items:center;gap:12px;margin-top:32px;flex-wrap:wrap}
+.filter-pill{padding:8px 20px;border:1px solid rgba(255,255,255,0.12);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white2);background:transparent;cursor:none;transition:all .3s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+.filter-pill:hover,.filter-pill.active{background:var(--orange);border-color:var(--orange);color:#fff}
+.shop-layout{display:grid;grid-template-columns:260px 1fr;gap:2px;padding:0 5vw;margin-top:2px}
+.shop-sidebar{background:var(--black2);padding:40px 28px;position:sticky;top:72px;align-self:start;max-height:calc(100vh - 72px);overflow-y:auto}
+.sidebar-section{margin-bottom:36px}
+.sidebar-section h4{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.sidebar-options{display:flex;flex-direction:column;gap:10px}
+.sidebar-opt{display:flex;align-items:center;justify-content:space-between;cursor:none;color:var(--white2);font-size:13px;transition:color .3s}
+.sidebar-opt:hover{color:var(--orange)}
+.opt-count{font-size:11px;color:var(--muted)}
+.price-range{width:100%;accent-color:var(--orange);cursor:none;margin-top:10px}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,0.04);padding:2px;align-content:start}
+
+/* ── ABOUT PAGE ── */
+#page-about{display:none;padding-top:72px}
+#page-about.active{display:block}
+.about-hero{background:var(--black);padding:100px 5vw 80px;position:relative;overflow:hidden;min-height:60vh;display:flex;align-items:center}
+.about-hero::before{content:'CROWN EVE';position:absolute;right:-2%;bottom:-10%;font-family:'Bebas Neue',sans-serif;font-size:16vw;color:rgba(255,255,255,0.025);white-space:nowrap;pointer-events:none}
+.about-hero-content{max-width:700px;position:relative;z-index:1}
+.about-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,8vw,120px);line-height:0.9;letter-spacing:-2px;margin-bottom:32px}
+.about-hero h1 span{color:var(--orange)}
+.about-hero p{font-size:17px;font-weight:300;color:var(--white2);line-height:1.9;max-width:560px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(255,255,255,0.04);margin:2px 0}
+.about-card{background:var(--black2);padding:60px 5vw}
+.about-values{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(255,255,255,0.04);padding:2px;margin:2px 0}
+.value-card{background:var(--black);padding:44px 32px;border-top:2px solid transparent;transition:border-color .4s}
+.value-card:hover{border-top-color:var(--orange)}
+.value-icon{font-size:28px;margin-bottom:20px}
+.value-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;margin-bottom:10px}
+.value-desc{font-size:13px;color:var(--white2);line-height:1.7}
+
+/* ── CONTACT PAGE ── */
+#page-contact{display:none;padding-top:72px}
+#page-contact.active{display:block}
+.contact-layout{display:grid;grid-template-columns:1fr 1.3fr;min-height:calc(100vh - 72px)}
+.contact-info{background:var(--orange);padding:80px 5vw;display:flex;flex-direction:column;justify-content:center}
+.contact-info h2{font-family:'Bebas Neue',sans-serif;font-size:80px;line-height:0.9;color:#000;letter-spacing:-2px;margin-bottom:36px}
+.contact-detail{display:flex;flex-direction:column;gap:28px;margin-top:40px}
+.contact-item{display:flex;align-items:flex-start;gap:16px;padding-bottom:28px;border-bottom:1px solid rgba(0,0,0,0.15)}
+.contact-item-icon{width:42px;height:42px;background:rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.contact-item-text h4{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,0,0,0.6);margin-bottom:4px}
+.contact-item-text p{font-size:14px;font-weight:600;color:#000}
+.contact-form-panel{background:var(--black2);padding:80px 5vw;display:flex;flex-direction:column;justify-content:center}
+.contact-form-panel h2{font-family:'Bebas Neue',sans-serif;font-size:60px;line-height:0.9;letter-spacing:-1px;margin-bottom:40px}
+.contact-form-panel h2 span{color:var(--orange)}
+textarea.form-textarea{width:100%;background:var(--black);border:1px solid rgba(255,255,255,0.1);color:var(--white);padding:14px 18px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .3s;resize:vertical;min-height:140px}
+textarea.form-textarea:focus{border-color:var(--orange)}
+
+/* ── BOOK SERVICE PAGE ── */
+#page-booking{display:none;padding-top:72px}
+#page-booking.active{display:block}
+.booking-page-hero{background:var(--black2);padding:80px 5vw 60px;border-bottom:1px solid rgba(255,77,0,0.1)}
+.booking-page-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,8vw,110px);line-height:0.9;letter-spacing:-2px}
+.booking-page-hero h1 span{color:var(--orange)}
+.booking-steps{display:flex;align-items:center;gap:0;margin-top:40px}
+.step-item{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.step-item.active{color:var(--orange)}
+.step-item.done{color:var(--white2)}
+.step-num{width:28px;height:28px;border:1px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.step-item.active .step-num{background:var(--orange);border-color:var(--orange);color:#fff}
+.step-connector{flex:1;height:1px;background:rgba(255,255,255,0.1);margin:0 12px;max-width:60px}
+.booking-form-layout{display:grid;grid-template-columns:2fr 1fr;gap:2px;padding:40px 5vw;background:rgba(255,255,255,0.03)}
+.booking-form-main{background:var(--black);padding:48px}
+.booking-sidebar-summary{background:var(--black2);padding:40px 28px;position:sticky;top:100px;align-self:start}
+.booking-sidebar-summary h3{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.summary-item{display:flex;justify-content:space-between;font-size:13px;margin-bottom:14px;color:var(--white2)}
+.summary-item strong{color:var(--white)}
+.summary-total{border-top:1px solid rgba(255,255,255,0.1);margin-top:20px;padding-top:20px;display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px}
+.summary-total span{color:var(--orange)}
+.service-selector{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
+.service-option{padding:20px;border:1px solid rgba(255,255,255,0.1);cursor:none;transition:all .3s;text-align:center}
+.service-option:hover,.service-option.selected{border-color:var(--orange);background:rgba(255,77,0,0.06)}
+.service-option-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.service-option-price{font-size:13px;color:var(--orange);font-weight:600}
+.date-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:32px}
+.date-btn{padding:14px 8px;border:1px solid rgba(255,255,255,0.08);text-align:center;cursor:none;transition:all .3s}
+.date-btn:hover,.date-btn.selected{border-color:var(--orange);background:rgba(255,77,0,0.08)}
+.date-btn .day-name{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.date-btn .day-num{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:32px}
+.time-btn{padding:12px 8px;border:1px solid rgba(255,255,255,0.08);text-align:center;cursor:none;transition:all .3s;font-size:13px;font-weight:600}
+.time-btn:hover,.time-btn.selected{border-color:var(--orange);background:rgba(255,77,0,0.08);color:var(--orange)}
+.form-section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);color:var(--white)}
+
+/* PAGE TRANSITIONS */
+.page{transition:opacity .3s ease}
+main{position:relative}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  #hero{grid-template-columns:1fr;text-align:center}
+  .hero-visual{display:none}
+  .features-grid{grid-template-columns:1fr}
+  .products-grid,.testimonials-grid{grid-template-columns:1fr 1fr}
+  .services-layout,.about-grid,.contact-layout,.booking-form-layout{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .shop-layout{grid-template-columns:1fr}
+  .shop-sidebar{position:static;max-height:none}
+  .shop-grid{grid-template-columns:1fr 1fr}
+  .about-values{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  nav .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ── NAVBAR ── -->
+<nav id="navbar">
+  <a href="#" class="logo" onclick="showPage('home')">
+    <div class="logo-icon"><span>CE</span></div>
+    <span class="logo-text">Crown <em>Eve</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('home')">Home</a></li>
+    <li><a href="#" onclick="showPage('shop')">Shop</a></li>
+    <li><a href="#" onclick="showPage('about')">About</a></li>
+    <li><a href="#" onclick="showPage('booking')">Book Service</a></li>
+    <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="#" class="btn-nav-login" onclick="showPage('login')">Login</a>
+    <a href="#" class="btn-nav-register" onclick="showPage('register')">Register</a>
+  </div>
+</nav>
+
+<!-- ════════════════════════════ HOME PAGE ════════════════════════════ -->
+<div id="page-home" class="page">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-lines"></div>
+    <div class="hero-number">01</div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span>Premium EV Bikes &amp; Service — Punjab</span>
+      </div>
+      <h1 class="hero-title">
+        Ride<br>
+        <span class="line2">The</span>
+        <span class="line3">Legacy.</span>
+      </h1>
+      <p class="hero-sub">Crown Hadi EV Center delivers premium electric bikes, expert servicing, and best-in-class lithium batteries — engineered for the road, built for the rider.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary" onclick="showPage('shop')">
+          <span>Explore Bikes</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="#" class="btn-ghost" onclick="showPage('booking')">
+          <span class="btn-ghost-line"></span>
+          Book A Service
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">12+</div>
+          <div class="stat-label">Branches</div>
+        </div>
+        <div>
+          <div class="stat-num">Best</div>
+          <div class="stat-label">Batteries</div>
+        </div>
+        <div>
+          <div class="stat-num">50K+</div>
+          <div class="stat-label">Customers</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="bike-showcase">
+        <div class="bike-glow"></div>
+        <div class="bike-img-placeholder">
+          [ HERO BIKE IMAGE ]
+          <div class="bike-tag t1"><span class="bike-tag-dot"></span>Lithium Battery</div>
+          <div class="bike-tag t2"><span class="bike-tag-dot"></span>Sport Series</div>
+          <div class="bike-tag t3"><span class="bike-tag-dot"></span>2025 Model</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">Scroll</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-item"><span class="marquee-sep">✦</span> Crown Hadi EV Center <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item highlight">Lithium Batteries</span>
+      <span class="marquee-item"><span class="marquee-sep">✦</span> Expert Service <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item highlight">Punjab's Premier Branches</span>
+      <span class="marquee-item"><span class="marquee-sep">✦</span> Smart Dashboards <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item highlight">High Performance Motors</span>
+      <span class="marquee-item"><span class="marquee-sep">✦</span> Crown Hadi EV Center <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item highlight">Lithium Batteries</span>
+      <span class="marquee-item"><span class="marquee-sep">✦</span> Expert Service <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item highlight">Punjab's Premier Branches</span>
+      <span class="marquee-item"><span class="marquee-sep">✦</span> Smart Dashboards <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item highlight">High Performance Motors</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>Why Crown Eve</span>
+    </div>
+    <h2 class="section-title">Built for<br><span style="color:var(--orange)">Riders.</span></h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-num">01</div>
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Best Batteries</div>
+        <div class="feature-desc">Experience long range and durability with our high-capacity lithium-ion battery packs.</div>
+      </div>
+      <div class="feature-card featured">
+        <div class="feature-num">02</div>
+        <div class="feature-icon" style="border-color:rgba(0,0,0,0.2)">🔧</div>
+        <div class="feature-title">Expert Technicians</div>
+        <div class="feature-desc">Certified mechanics trained to handle every make and model with precision and care.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">03</div>
+        <div class="feature-icon">📍</div>
+        <div class="feature-title">12+ Branches</div>
+        <div class="feature-desc">Nationwide presence so you're never far from premium Crown Eve service and support.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">04</div>
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Online Booking</div>
+        <div class="feature-desc">Book services, track orders, and manage appointments from anywhere, any time.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">05</div>
+        <div class="feature-icon">🏆</div>
+        <div class="feature-title">Premium Quality</div>
+        <div class="feature-desc">Every product we carry is hand-selected for performance, durability, and excellence.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">06</div>
+        <div class="feature-icon">🔄</div>
+        <div class="feature-title">Real-Time Tracking</div>
+        <div class="feature-desc">Live order and service status updates so you always know exactly what's happening.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section id="products">
+    <div class="products-header">
+      <div>
+        <div class="section-label">
+          <div class="section-label-line"></div>
+          <span>Featured Lineup</span>
+        </div>
+        <h2 class="section-title">Our<br><span style="color:var(--orange)">Bikes.</span></h2>
+      </div>
+      <a href="#" class="view-all" onclick="showPage('shop')">View all bikes →</a>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-card-img">[ BIKE IMAGE ]
+          <div class="product-card-overlay"></div>
+          <div class="product-card-quick">View Details</div>
+        </div>
+        <div class="product-card-body">
+          <div class="product-cat">Sport Series</div>
+          <div class="product-name">Crown GT 390</div>
+          <div style="font-size:13px;color:var(--white2);margin-top:4px">450cc · Fuel Injected · ABS</div>
+          <div class="product-price-row">
+            <div class="product-price">PKR 485,000</div>
+            <div class="product-badge">In Stock</div>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-card-img" style="background:var(--black2)">[ BIKE IMAGE ]
+          <div class="product-card-overlay"></div>
+          <div class="product-card-quick">View Details</div>
+        </div>
+        <div class="product-card-body">
+          <div class="product-cat">Naked Series</div>
+          <div class="product-name">Crown Duke R</div>
+          <div style="font-size:13px;color:var(--white2);margin-top:4px">250cc · Street Fighter · LED</div>
+          <div class="product-price-row">
+            <div class="product-price">PKR 310,000</div>
+            <div class="product-badge" style="background:rgba(255,100,0,0.15)">New Arrival</div>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-card-img">[ BIKE IMAGE ]
+          <div class="product-card-overlay"></div>
+          <div class="product-card-quick">View Details</div>
+        </div>
+        <div class="product-card-body">
+          <div class="product-cat">Adventure Series</div>
+          <div class="product-name">Crown Trail X</div>
+          <div style="font-size:13px;color:var(--white2);margin-top:4px">650cc · Dual Sport · Long Range</div>
+          <div class="product-price-row">
+            <div class="product-price">PKR 720,000</div>
+            <div class="product-badge">In Stock</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>What We Do</span>
+    </div>
+    <h2 class="section-title">Our<br><span style="color:var(--orange)">Services.</span></h2>
+    <div class="services-layout">
+      <div class="services-list">
+        <div class="service-item">
+          <div class="service-item-left">
+            <span class="service-item-num">01</span>
+            <div>
+              <div class="service-item-name">Full Tune-Up</div>
+              <div class="service-item-price">From PKR 2,500</div>
+            </div>
+          </div>
+          <span class="service-item-icon">+</span>
+        </div>
+        <div class="service-item">
+          <div class="service-item-left">
+            <span class="service-item-num">02</span>
+            <div>
+              <div class="service-item-name">Oil &amp; Filter Change</div>
+              <div class="service-item-price">From PKR 800</div>
+            </div>
+          </div>
+          <span class="service-item-icon">+</span>
+        </div>
+        <div class="service-item">
+          <div class="service-item-left">
+            <span class="service-item-num">03</span>
+            <div>
+              <div class="service-item-name">Brake System Overhaul</div>
+              <div class="service-item-price">From PKR 3,200</div>
+            </div>
+          </div>
+          <span class="service-item-icon">+</span>
+        </div>
+        <div class="service-item">
+          <div class="service-item-left">
+            <span class="service-item-num">04</span>
+            <div>
+              <div class="service-item-name">Engine Diagnostics</div>
+              <div class="service-item-price">From PKR 1,500</div>
+            </div>
+          </div>
+          <span class="service-item-icon">+</span>
+        </div>
+        <div class="service-item">
+          <div class="service-item-left">
+            <span class="service-item-num">05</span>
+            <div>
+              <div class="service-item-name">Tyre Replacement</div>
+              <div class="service-item-price">From PKR 600</div>
+            </div>
+          </div>
+          <span class="service-item-icon">+</span>
+        </div>
+      </div>
+      <div class="services-cta-panel">
+        <h3>Book Your<br><span style="color:var(--orange)">Service</span><br>Today.</h3>
+        <p>Our certified technicians are ready to keep your ride in peak condition. Schedule online in under 2 minutes — choose your branch, pick a slot, and we handle the rest.</p>
+        <a href="#" class="btn-primary" onclick="showPage('booking')">
+          <span>Book Now</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING CTA BANNER -->
+  <section id="booking" style="padding:80px 5vw">
+    <div class="booking-inner">
+      <div class="booking-text">
+        <h2>Ready to<br>Ride?</h2>
+        <p>Browse our full catalog of premium bikes, genuine parts, and accessories. Find your next ride today.</p>
+      </div>
+      <a href="#" class="btn-booking" onclick="showPage('shop')">Shop The Collection →</a>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>What Riders Say</span>
+    </div>
+    <h2 class="section-title">Trusted by<br><span style="color:var(--orange)">Riders.</span></h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Crown Eve is the only place I trust with my Duke. The technicians are certified, the parts are genuine, and the service is fast. Nothing compares."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AK</div>
+          <div>
+            <div class="author-name">Ali Kamran</div>
+            <div class="author-role">KTM Duke Owner, Lahore</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Booked my full service online in 2 minutes. Got an update when the tech started and when it was done. This is how bike service should work."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">SH</div>
+          <div>
+            <div class="author-name">Sara Hussain</div>
+            <div class="author-role">Yamaha R15 Owner, Karachi</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Incredible battery range and build quality! The digital dashboard is exceptionally smart, and the motor performance is whisper-quiet yet very powerful."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">MR</div>
+          <div>
+            <div class="author-name">Muhammad Raza</div>
+            <div class="author-role">Honda CBR Owner, Islamabad</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo" onclick="showPage('home')">
+          <div class="logo-icon"><span>CE</span></div>
+          <span class="logo-text">Crown <em>Eve</em></span>
+        </a>
+        <p>Punjab's premium mobility destination with different branches. Premium EV bikes, long-range batteries, and expert service — all in one place.</p>
+        <div class="footer-socials">
+          <a href="https://web.facebook.com/hadievcenter/?_rdc=1&_rdr" target="_blank" rel="noopener noreferrer" class="social-link">fb</a>
+          <a href="https://www.instagram.com/hadievcenter?hl=af" target="_blank" rel="noopener noreferrer" class="social-link">ig</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('shop')">Shop Bikes</a></li>
+          <li><a href="#" onclick="showPage('shop')">Parts Catalog</a></li>
+          <li><a href="#" onclick="showPage('booking')">Book Service</a></li>
+          <li><a href="#" onclick="showPage('about')">About Us</a></li>
+          <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('login')">Sign In</a></li>
+          <li><a href="#" onclick="showPage('register')">Register</a></li>
+          <li><a href="#">My Orders</a></li>
+          <li><a href="#">My Bookings</a></li>
+          <li><a href="#">Track Order</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('contact')">Get Help</a></li>
+          <li><a href="#">Find A Branch</a></li>
+          <li><a href="#">Warranty</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 <span>Crown Eve Bikes</span>. All rights reserved. Built with precision.</p>
+      <p style="font-size:11px;color:var(--muted)">Lahore · Karachi · Islamabad · Faisalabad</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════ LOGIN PAGE ════════════════════════════ -->
+<div id="page-login" class="page" style="display:none;min-height:100vh;align-items:center;justify-content:center;padding:100px 5vw 60px;background:var(--black);position:relative">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 80% 50%,rgba(255,77,0,0.07),transparent);pointer-events:none"></div>
+  <div class="login-card">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--orange),transparent)"></div>
+    <a href="#" class="logo" onclick="showPage('home')" style="margin-bottom:32px;display:inline-flex">
+      <div class="logo-icon"><span>CE</span></div>
+      <span class="logo-text">Crown <em>Eve</em></span>
+    </a>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:52px;margin-bottom:6px;letter-spacing:-1px">Welcome Back.</h2>
+    <p style="font-size:13px;color:var(--white2);margin-bottom:28px">Sign in to your account — owners, staff, and customers all use this same portal.</p>
+    <div class="role-info">
+      <strong>Role-based access:</strong> After login, you're automatically redirected to your dashboard based on your role — Company Owner, Branch Owner, Employee, Technician, or Customer.
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="your@email.com"/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="••••••••"/>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--white2);cursor:none">
+        <input type="checkbox" style="accent-color:var(--orange)"/> Remember me
+      </label>
+      <a href="#" class="form-link">Forgot password?</a>
+    </div>
+    <button class="form-submit">Sign In →</button>
+    <div class="form-divider">— or —</div>
+    <div style="text-align:center;font-size:13px;color:var(--white2)">
+      New customer? <a href="#" class="form-link" onclick="showPage('register')">Create an account</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ REGISTER PAGE ════════════════════════════ -->
+<div id="page-register" class="page" style="display:none;min-height:100vh;align-items:center;justify-content:center;padding:100px 5vw 60px;background:var(--black);position:relative">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 20% 50%,rgba(255,77,0,0.06),transparent);pointer-events:none"></div>
+  <div class="register-card">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--orange),transparent)"></div>
+    <a href="#" class="logo" onclick="showPage('home')" style="margin-bottom:32px;display:inline-flex">
+      <div class="logo-icon"><span>CE</span></div>
+      <span class="logo-text">Crown <em>Eve</em></span>
+    </a>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:52px;margin-bottom:6px;letter-spacing:-1px">Create Account.</h2>
+    <p style="font-size:13px;color:var(--white2);margin-bottom:32px">Join Crown Eve — browse bikes, book services, track your orders.</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" placeholder="Ali"/>
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" placeholder="Khan"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="ali@email.com"/>
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" placeholder="+92 300 0000000"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••"/>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" placeholder="••••••••"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>City</label>
+      <select>
+        <option>Select your city</option>
+        <option>Lahore</option>
+        <option>Karachi</option>
+        <option>Islamabad</option>
+        <option>Faisalabad</option>
+        <option>Rawalpindi</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px">
+      <input type="checkbox" id="terms" style="margin-top:3px;accent-color:var(--orange);cursor:none"/>
+      <label for="terms" style="font-size:12px;color:var(--white2);line-height:1.6;cursor:none">I agree to the <a href="#" class="form-link">Terms of Service</a> and <a href="#" class="form-link">Privacy Policy</a></label>
+    </div>
+    <button class="form-submit">Create My Account →</button>
+    <div class="form-divider">— or —</div>
+    <div style="text-align:center;font-size:13px;color:var(--white2)">
+      Already have an account? <a href="#" class="form-link" onclick="showPage('login')">Sign in</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ SHOP PAGE ════════════════════════════ -->
+<div id="page-shop" class="page" style="display:none">
+  <div class="shop-hero">
+    <div class="section-label"><div class="section-label-line"></div><span>Our Collection</span></div>
+    <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,8vw,110px);line-height:0.9;letter-spacing:-2px">Shop <span style="color:var(--orange)">Premium</span><br>Bikes.</h1>
+    <div class="shop-filters">
+      <button class="filter-pill active">All</button>
+      <button class="filter-pill">Sport</button>
+      <button class="filter-pill">Naked</button>
+      <button class="filter-pill">Adventure</button>
+      <button class="filter-pill">Commuter</button>
+      <button class="filter-pill">Parts</button>
+    </div>
+  </div>
+  <div class="shop-layout">
+    <aside class="shop-sidebar">
+      <div class="sidebar-section">
+        <h4>Category</h4>
+        <div class="sidebar-options">
+          <div class="sidebar-opt"><span>All Bikes</span><span class="opt-count">48</span></div>
+          <div class="sidebar-opt"><span>Sport Series</span><span class="opt-count">12</span></div>
+          <div class="sidebar-opt"><span>Naked Series</span><span class="opt-count">10</span></div>
+          <div class="sidebar-opt"><span>Adventure</span><span class="opt-count">8</span></div>
+          <div class="sidebar-opt"><span>Commuter</span><span class="opt-count">14</span></div>
+          <div class="sidebar-opt"><span>Parts Only</span><span class="opt-count">1700+</span></div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <h4>Price Range</h4>
+        <input type="range" class="price-range" min="50000" max="2000000" value="1000000"/>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--muted)">
+          <span>PKR 50K</span><span>PKR 20L</span>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <h4>Availability</h4>
+        <div class="sidebar-options">
+          <div class="sidebar-opt"><span>In Stock</span><span class="opt-count">38</span></div>
+          <div class="sidebar-opt"><span>On Order</span><span class="opt-count">8</span></div>
+          <div class="sidebar-opt"><span>Pre-Order</span><span class="opt-count">4</span></div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <h4>Engine Size</h4>
+        <div class="sidebar-options">
+          <div class="sidebar-opt"><span>Under 150cc</span><span class="opt-count">14</span></div>
+          <div class="sidebar-opt"><span>150–300cc</span><span class="opt-count">16</span></div>
+          <div class="sidebar-opt"><span>300–500cc</span><span class="opt-count">10</span></div>
+          <div class="sidebar-opt"><span>500cc+</span><span class="opt-count">8</span></div>
+        </div>
+      </div>
+    </aside>
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px;background:var(--black2);border-bottom:1px solid rgba(255,255,255,0.06)">
+        <span style="font-size:12px;color:var(--muted)">Showing 1–12 of 48 bikes</span>
+        <select style="background:var(--black);border:1px solid rgba(255,255,255,0.1);color:var(--white);padding:8px 14px;font-size:12px;outline:none;cursor:none;font-family:'Barlow',sans-serif">
+          <option>Sort: Featured</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Newest First</option>
+        </select>
+      </div>
+      <div class="shop-grid">
+        <div class="product-card"><div class="product-card-img">[ BIKE ]<div class="product-card-overlay"></div><div class="product-card-quick">View Details</div></div><div class="product-card-body"><div class="product-cat">Sport</div><div class="product-name">Crown GT 390</div><div class="product-price-row"><div class="product-price">PKR 485K</div><div class="product-badge">In Stock</div></div></div></div>
+        <div class="product-card"><div class="product-card-img" style="background:var(--black2)">[ BIKE ]<div class="product-card-overlay"></div><div class="product-card-quick">View Details</div></div><div class="product-card-body"><div class="product-cat">Naked</div><div class="product-name">Crown Duke R</div><div class="product-price-row"><div class="product-price">PKR 310K</div><div class="product-badge" style="background:rgba(255,100,0,0.15)">New</div></div></div></div>
+        <div class="product-card"><div class="product-card-img">[ BIKE ]<div class="product-card-overlay"></div><div class="product-card-quick">View Details</div></div><div class="product-card-body"><div class="product-cat">Adventure</div><div class="product-name">Crown Trail X</div><div class="product-price-row"><div class="product-price">PKR 720K</div><div class="product-badge">In Stock</div></div></div></div>
+        <div class="product-card"><div class="product-card-img" style="background:var(--black2)">[ BIKE ]<div class="product-card-overlay"></div><div class="product-card-quick">View Details</div></div><div class="product-card-body"><div class="product-cat">Commuter</div><div class="product-name">Crown 125 Pro</div><div class="product-price-row"><div class="product-price">PKR 185K</div><div class="product-badge">In Stock</div></div></div></div>
+        <div class="product-card"><div class="product-card-img">[ BIKE ]<div class="product-card-overlay"></div><div class="product-card-quick">View Details</div></div><div class="product-card-body"><div class="product-cat">Sport</div><div class="product-name">Crown RC 200</div><div class="product-price-row"><div class="product-price">PKR 420K</div><div class="product-badge">In Stock</div></div></div></div>
+        <div class="product-card"><div class="product-card-img" style="background:var(--black2)">[ BIKE ]<div class="product-card-overlay"></div><div class="product-card-quick">View Details</div></div><div class="product-card-body"><div class="product-cat">Naked</div><div class="product-name">Crown Hypermoto</div><div class="product-price-row"><div class="product-price">PKR 560K</div><div class="product-badge" style="background:rgba(255,100,0,0.15)">Pre-Order</div></div></div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:40px">
+        <button class="filter-pill active">1</button>
+        <button class="filter-pill">2</button>
+        <button class="filter-pill">3</button>
+        <button class="filter-pill">4</button>
+        <span style="color:var(--muted);font-size:13px">...</span>
+        <button class="filter-pill">Next →</button>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-bottom" style="padding:24px 5vw">
+      <p>© 2025 <span style="color:var(--orange)">Crown Eve Bikes</span>. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════ ABOUT PAGE ════════════════════════════ -->
+<div id="page-about" class="page" style="display:none">
+  <div class="about-hero">
+    <div class="about-hero-content">
+      <div class="section-label"><div class="section-label-line"></div><span>Our Story</span></div>
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,8vw,120px);line-height:0.9;letter-spacing:-2px;margin-bottom:32px">We Live<br>to <span style="color:var(--orange)">Ride.</span></h1>
+      <p style="font-size:17px;font-weight:300;color:var(--white2);line-height:1.9;max-width:580px">Crown Eve was founded by riders, for riders. What started as a single workshop in Lahore has grown into Pakistan's most trusted motorcycle destination — 12 branches, 50,000+ customers, and a relentless commitment to the ride.</p>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(255,255,255,0.04)">
+    <div style="background:var(--black2);padding:72px 5vw">
+      <div class="section-label"><div class="section-label-line"></div><span>Our Mission</span></div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:60px;line-height:0.9;letter-spacing:-1px;margin-bottom:24px">Elevating<br>Every<br><span style="color:var(--orange)">Ride.</span></h2>
+      <p style="font-size:15px;font-weight:300;color:var(--white2);line-height:1.9">We believe every rider deserves access to premium bikes, genuine parts, and expert care — regardless of city or budget. Our mission is to be the most trusted name in Pakistan's motorcycle industry.</p>
+    </div>
+    <div style="background:var(--black3);padding:72px 5vw;border-left:1px solid rgba(255,77,0,0.1);position:relative;overflow:hidden">
+      <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,77,0,0.1),transparent);pointer-events:none"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+        <div><div style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:var(--orange);line-height:1">12+</div><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px">Branches</div></div>
+        <div><div style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:var(--orange);line-height:1">50K+</div><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px">Customers</div></div>
+        <div><div style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:var(--orange);line-height:1">1700+</div><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px">Parts</div></div>
+        <div><div style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:var(--orange);line-height:1">8+</div><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px">Years</div></div>
+      </div>
+    </div>
+  </div>
+  <section style="padding:100px 5vw;background:var(--black)">
+    <div class="section-label"><div class="section-label-line"></div><span>Our Values</span></div>
+    <h2 class="section-title">What<br>Drives <span style="color:var(--orange)">Us.</span></h2>
+    <div class="about-values" style="margin-top:60px">
+      <div class="value-card"><div class="value-icon">⚡</div><div class="value-title">Performance First</div><div class="value-desc">Every product is selected for its performance credentials — no compromises.</div></div>
+      <div class="value-card"><div class="value-icon">🔒</div><div class="value-title">Trusted Quality</div><div class="value-desc">Only genuine parts. Only certified technicians. Only real results.</div></div>
+      <div class="value-card"><div class="value-icon">🤝</div><div class="value-title">Rider Community</div><div class="value-desc">We're riders too. We speak your language and understand your needs.</div></div>
+      <div class="value-card"><div class="value-icon">🌍</div><div class="value-title">Nationwide Access</div><div class="value-desc">12 branches and growing — Crown Eve is wherever you are.</div></div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-bottom" style="padding:24px 5vw">
+      <p>© 2025 <span style="color:var(--orange)">Crown Eve Bikes</span>. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════ CONTACT PAGE ════════════════════════════ -->
+<div id="page-contact" class="page" style="display:none">
+  <div class="contact-layout" style="min-height:calc(100vh - 0px);margin-top:72px">
+    <div class="contact-info">
+      <div class="section-label" style="margin-bottom:12px"><div class="section-label-line" style="background:#000"></div><span style="color:#000;opacity:0.6">Get In Touch</span></div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,6vw,90px);line-height:0.9;color:#000;letter-spacing:-2px">Let's<br>Talk.</h2>
+      <div class="contact-detail">
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text"><h4>Head Office</h4><p>Hadi Ev Center, Bahawalnagar road Chishtian</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text"><h4>Phone</h4><p>0300 698 3345, 0300 449 4545</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div class="contact-item-text"><h4>Email</h4><p>info@crownelectricmobility.com</p></div>
+        </div>
+        <div class="contact-item" style="border:none;padding-bottom:0">
+          <div class="contact-item-icon">🕐</div>
+          <div class="contact-item-text"><h4>Hours</h4><p>Mon–Sat: 9am – 7pm · Sun: 10am – 4pm</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form-panel">
+      <div class="section-label"><div class="section-label-line"></div><span>Send A Message</span></div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5vw,72px);line-height:0.9;letter-spacing:-1px;margin-bottom:36px">How Can We<br><span style="color:var(--orange)">Help?</span></h2>
+      <div class="form-row">
+        <div class="form-group"><label>Your Name</label><input type="text" placeholder="Ali Khan"/></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="ali@email.com"/></div>
+      </div>
+      <div class="form-group"><label>Subject</label>
+        <select style="width:100%;background:var(--black);border:1px solid rgba(255,255,255,0.1);color:var(--white);padding:14px 18px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;-webkit-appearance:none">
+          <option>General Enquiry</option>
+          <option>Service Booking</option>
+          <option>Parts Request</option>
+          <option>Complaint</option>
+          <option>Partnership</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Message</label><textarea class="form-textarea" placeholder="Tell us how we can help..."></textarea></div>
+      <button class="form-submit" style="margin-top:8px">Send Message →</button>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-bottom" style="padding:24px 5vw">
+      <p>© 2025 <span style="color:var(--orange)">Crown Eve Bikes</span>. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════ BOOK SERVICE PAGE ════════════════════════════ -->
+<div id="page-booking" class="page" style="display:none">
+  <div class="booking-page-hero">
+    <div class="section-label"><div class="section-label-line"></div><span>Service Centre</span></div>
+    <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,7vw,100px);line-height:0.9;letter-spacing:-2px">Book Your <span style="color:var(--orange)">Service.</span></h1>
+    <p style="font-size:15px;color:var(--white2);margin-top:16px;max-width:480px;line-height:1.8">Choose your branch, pick a service, select a date and time. Our certified technicians will handle the rest.</p>
+    <div class="booking-steps">
+      <div class="step-item active"><div class="step-num">1</div> Select Service</div>
+      <div class="step-connector"></div>
+      <div class="step-item"><div class="step-num">2</div> Choose Branch</div>
+      <div class="step-connector"></div>
+      <div class="step-item"><div class="step-num">3</div> Pick Date & Time</div>
+      <div class="step-connector"></div>
+      <div class="step-item"><div class="step-num">4</div> Confirm</div>
+    </div>
+  </div>
+  <div class="booking-form-layout">
+    <div class="booking-form-main">
+      <div class="form-section-title">Choose A Service</div>
+      <div class="service-selector">
+        <div class="service-option selected"><div class="service-option-name">Full Tune-Up</div><div class="service-option-price">From PKR 2,500</div></div>
+        <div class="service-option"><div class="service-option-name">Oil Change</div><div class="service-option-price">From PKR 800</div></div>
+        <div class="service-option"><div class="service-option-name">Brake Overhaul</div><div class="service-option-price">From PKR 3,200</div></div>
+        <div class="service-option"><div class="service-option-name">Diagnostics</div><div class="service-option-price">From PKR 1,500</div></div>
+        <div class="service-option"><div class="service-option-name">Tyre Change</div><div class="service-option-price">From PKR 600</div></div>
+        <div class="service-option"><div class="service-option-name">Chain Service</div><div class="service-option-price">From PKR 400</div></div>
+      </div>
+      <div class="form-section-title">Select Branch</div>
+      <div class="form-group" style="margin-bottom:32px">
+        <select style="width:100%;background:var(--black3);border:1px solid rgba(255,255,255,0.1);color:var(--white);padding:14px 18px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;-webkit-appearance:none">
+          <option>Select nearest branch</option>
+          <option>Crown Eve Gulberg — Lahore</option>
+          <option>Crown Eve DHA — Lahore</option>
+          <option>Crown Eve Clifton — Karachi</option>
+          <option>Crown Eve Blue Area — Islamabad</option>
+          <option>Crown Eve Canal Road — Faisalabad</option>
+        </select>
+      </div>
+      <div class="form-section-title">Select Date</div>
+      <div class="date-grid">
+        <div class="date-btn"><div class="day-name">Mon</div><div class="day-num">23</div></div>
+        <div class="date-btn selected"><div class="day-name">Tue</div><div class="day-num">24</div></div>
+        <div class="date-btn"><div class="day-name">Wed</div><div class="day-num">25</div></div>
+        <div class="date-btn"><div class="day-name">Thu</div><div class="day-num">26</div></div>
+        <div class="date-btn"><div class="day-name">Fri</div><div class="day-num">27</div></div>
+        <div class="date-btn" style="opacity:0.3"><div class="day-name">Sat</div><div class="day-num">28</div></div>
+        <div class="date-btn"><div class="day-name">Mon</div><div class="day-num">30</div></div>
+      </div>
+      <div class="form-section-title">Select Time</div>
+      <div class="time-grid">
+        <div class="time-btn">9:00 AM</div>
+        <div class="time-btn selected">10:00 AM</div>
+        <div class="time-btn">11:00 AM</div>
+        <div class="time-btn" style="opacity:0.3;cursor:not-allowed">12:00 PM</div>
+        <div class="time-btn">2:00 PM</div>
+        <div class="time-btn">3:00 PM</div>
+        <div class="time-btn">4:00 PM</div>
+        <div class="time-btn">5:00 PM</div>
+      </div>
+      <div class="form-section-title">Your Details</div>
+      <div class="form-row">
+        <div class="form-group"><label>Name</label><input type="text" placeholder="Ali Khan" style="background:var(--black3)"/></div>
+        <div class="form-group"><label>Phone</label><input type="tel" placeholder="+92 300 0000000" style="background:var(--black3)"/></div>
+      </div>
+      <div class="form-group"><label>Bike Model</label><input type="text" placeholder="e.g. KTM Duke 390 2022" style="background:var(--black3)"/></div>
+      <div class="form-group"><label>Additional Notes</label><textarea class="form-textarea" style="background:var(--black3)" placeholder="Any specific issues or requests?"></textarea></div>
+      <button class="form-submit" style="margin-top:8px">Confirm Booking →</button>
+    </div>
+    <div class="booking-sidebar-summary">
+      <h3>Booking Summary</h3>
+      <div class="summary-item"><span>Service</span><strong>Full Tune-Up</strong></div>
+      <div class="summary-item"><span>Branch</span><strong>—</strong></div>
+      <div class="summary-item"><span>Date</span><strong>Tue, Apr 24</strong></div>
+      <div class="summary-item"><span>Time</span><strong>10:00 AM</strong></div>
+      <div class="summary-item"><span>Duration</span><strong>~2 hours</strong></div>
+      <div class="summary-total"><span>Estimate</span><span>PKR 2,500</span></div>
+      <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6">Final price confirmed at branch. Free cancellation up to 2 hours before appointment.</p>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-bottom" style="padding:24px 5vw">
+      <p>© 2025 <span style="color:var(--orange)">Crown Eve Bikes</span>. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 80);
+});
+document.querySelectorAll('a,button,[onclick]').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    ring.style.transform = 'translate(-50%,-50%) scale(1.6)';
+    ring.style.opacity = '1';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.style.transform = 'translate(-50%,-50%) scale(1)';
+    ring.style.opacity = '0.6';
+  });
+});
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+const PAGES = ['home','login','register','shop','about','contact','booking'];
+function showPage(name) {
+  PAGES.forEach(p => {
+    const el = document.getElementById('page-' + p);
+    if(el) {
+      el.style.display = 'none';
+      el.style.opacity = '0';
+    }
+  });
+  const target = document.getElementById('page-' + name);
+  if(target) {
+    target.style.display = (name === 'login' || name === 'register') ? 'flex' : 'block';
+    setTimeout(() => { target.style.opacity = '1'; }, 10);
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  return false;
+}
+
+document.querySelectorAll('.filter-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    this.closest('.shop-filters, div')?.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+document.querySelectorAll('.service-option').forEach(opt => {
+  opt.addEventListener('click', function() {
+    this.closest('.service-selector').querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+document.querySelectorAll('.date-btn:not([style*="opacity:0.3"])').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.closest('.date-grid').querySelectorAll('.date-btn').forEach(b => b.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+document.querySelectorAll('.time-btn:not([style*="cursor:not-allowed"])').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.closest('.time-grid').querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+
+document.getElementById('page-home').style.display = 'block';
+document.getElementById('page-home').style.opacity = '1';
+</script>
+</body>
+</html>
