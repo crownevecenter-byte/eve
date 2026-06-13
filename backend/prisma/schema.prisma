@@ -1,0 +1,511 @@
+// backend/prisma/schema.prisma
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+  // Hostinger currently runs Debian with OpenSSL 1.1, so include it to avoid
+  // Prisma Query Engine crashes (e.g. "PANIC: timer has gone away").
+  binaryTargets   = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Enums converted to Strings for SQLite compatibility
+
+model User {
+  id           String           @id @default(uuid())
+  email        String           @unique
+  password     String? // null for OAuth-only users (e.g. Google)
+  googleId     String?          @unique
+  name         String
+  phone        String?
+  city         String?
+  role         String           @default("CUSTOMER")
+  branchId     Int?
+  branch       Branch?          @relation(fields: [branchId], references: [id])
+  orders       Order[]
+  serviceBookings ServiceBooking[] @relation("CustomerBookings")
+  isVerified   Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+
+  @@index([email])
+  @@index([branchId])
+}
+
+model OtpVerification {
+  id         Int      @id @default(autoincrement())
+  email      String
+  otp        String
+  purpose    String   @default("VERIFY_EMAIL") // VERIFY_EMAIL | PASSWORD_RESET
+  expiresAt  DateTime
+  isUsed     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([email])
+  @@index([email, createdAt])
+}
+
+model Branch {
+  id           Int           @id @default(autoincrement())
+  name         String
+  location     String
+  phone        String?
+  whatsapp     String?
+  users        User[]
+  products     Product[]
+  inventory    Inventory[]
+  orders       Order[]
+  serviceBookings ServiceBooking[]
+  services     Service[]
+  purchases    Purchase[]
+  adjustments  StockAdjustment[]
+  walkInCustomers WalkInCustomer[]
+  banks        Bank[]
+  accountCategories AccountCategory[]
+  accounts          Account[]
+  vouchers          Voucher[]
+  createdAt    DateTime      @default(now())
+}
+
+model Part {
+  id           Int           @id @default(autoincrement())
+  name         String
+  category     String
+  price        Float         // Selling price
+  stock        Int           @default(0) // Central catalog stock or reference
+  inventory    Inventory[]
+  productParts ProductPart[]
+  purchaseItems PurchaseItem[]
+  adjustments  StockAdjustment[]
+  createdAt    DateTime      @default(now())
+
+  @@index([category])
+}
+
+model Product {
+  id           String         @id @default(uuid())
+  name         String
+  slug         String         @unique
+  product_type String         // 'bike' or 'part'
+  description  String?
+  price        Float          // Original price
+  sale_price   Float?         // Sale price (optional)
+  stock_qty    Int            @default(0)
+  categoryId   String?
+  category     Category?      @relation(fields: [categoryId], references: [id])
+  brandId      String?
+  brand        Brand?         @relation(fields: [brandId], references: [id])
+  is_active    Boolean        @default(true)
+  branchId     Int
+  branch       Branch         @relation(fields: [branchId], references: [id])
+  images       ProductImage[]
+  bikeDetail   Bike?
+  partDetail   PartDetail?
+  orders       OrderItem[]
+  productParts ProductPart[]
+  purchaseItems PurchaseItem[]
+  createdAt    DateTime       @default(now())
+
+  @@index([branchId])
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([product_type])
+  @@index([branchId, product_type])
+  @@index([branchId, is_active])
+  @@index([name])
+  @@index([is_active])
+}
+
+model Bike {
+  id                    String  @id @default(uuid())
+  productId             String  @unique
+  product               Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  motor_type            String? // e.g. Multi Mode Motor
+  motor_watt_min        Int?    // e.g. 3000W
+  motor_watt_max        Int?    // e.g. 4000W
+  battery_voltage       Float?  // e.g. 73.6V
+  battery_capacity_ah   Float?  // e.g. 40Ah
+  battery_type          String? // e.g. Lithium LFP
+  speed_min_kmh         Float?  // e.g. 85 km/h
+  speed_max_kmh         Float?  // e.g. 90 km/h
+  range_eco_min_km      Int?    // e.g. 100 km
+  range_eco_max_km      Int?    // e.g. 110 km
+  speed_modes           Int?    // e.g. 4
+  charger               String? // e.g. 72V10A
+  charging_time_min_hrs Float?  // e.g. 4 hrs
+  charging_time_max_hrs Float?  // e.g. 5 hrs
+  net_weight_kg         Int?    // e.g. 100 kg
+  loading_capacity_kg   Int?    // e.g. 200 kg
+  security              String? // e.g. NFC Unlock
+  braking_system        String? // e.g. F/R CBS
+  color_options         Json?   // e.g. ["White","Blue","Red","Black","Grey"]
+  frame_material        String? // Aluminium / Steel
+  wheel_size            String? // e.g. 17"
+  warranty              String? // e.g. 1 Year Battery
+}
+
+model PartDetail {
+  id                  String  @id @default(uuid())
+  productId           String  @unique
+  product             Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  serial_no           Int?    // S/O number
+  item_code           String? // e.g. SK-0104-FR
+  model               String? // e.g. SPARK RD
+  description         String? // Technical description
+  cp_price            Float?  // Cost/Purchase price
+  compatible_models   Json?   // e.g. ["SPARK RD", "ROBIN S-16"]
+  compatible_bike_ids Json?   // FK references to bike product IDs
+  unit                String? @default("piece") // piece, set, pair
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  parent_id   String?
+  parent      Category?  @relation("SubCategories", fields: [parent_id], references: [id])
+  children    Category[] @relation("SubCategories")
+  description String?
+  products    Product[]
+  createdAt   DateTime   @default(now())
+}
+
+model Brand {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  country   String?
+  city      String?
+  contact   String?
+  logo_url  String?
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model ProductImage {
+  id         String  @id @default(uuid())
+  productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url        String
+  is_primary Boolean @default(false)
+  sort_order Int     @default(0)
+
+  @@index([productId])
+}
+
+model ProductPart {
+  id        Int     @id @default(autoincrement())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  partId    Int
+  part      Part    @relation(fields: [partId], references: [id], onDelete: Cascade)
+  quantity  Int     @default(1)
+
+  @@index([productId])
+  @@index([partId])
+}
+
+model Inventory {
+  id       Int    @id @default(autoincrement())
+  branchId Int
+  branch   Branch @relation(fields: [branchId], references: [id])
+  partId   Int
+  part     Part   @relation(fields: [partId], references: [id])
+  stock    Int    @default(0)
+  alertAt  Int    @default(5) // Threshold for alerts
+
+  @@unique([branchId, partId])
+  @@index([branchId])
+  @@index([stock])
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  customerId String?
+  customer   User?       @relation(fields: [customerId], references: [id])
+  walkInCustomerId String?
+  walkInCustomer   WalkInCustomer? @relation("WalkInOrders", fields: [walkInCustomerId], references: [id])
+  branchId   Int
+  branch     Branch      @relation(fields: [branchId], references: [id])
+  bankId     String?
+  bank       Bank?       @relation(fields: [bankId], references: [id])
+  total      Float
+  status         String @default("PENDING")
+  type           String      @default("POS") // POS or ONLINE
+  payment_method String      @default("CASH") // CASH, ACCOUNT, etc.
+  payment_status String      @default("PENDING") // PENDING, PAID, REJECTED
+  payment_screenshot String?
+  transaction_id String?
+  tracking_id    String?
+  customer_name  String?
+  customer_phone String?
+  notes          String?
+  items          OrderItem[]
+  ledgerEntries  WalkInCustomerLedger[]
+  createdAt      DateTime    @default(now())
+
+  @@index([branchId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([branchId, status, createdAt])
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
+}
+
+model Service {
+  id                String           @id @default(uuid())
+  name              String
+  service_type      String           // maintenance / repair / installation
+  description       String?
+  base_price        Float
+  duration_minutes  Int              @default(30)
+  is_active         Boolean          @default(true)
+  branchId          Int
+  branch            Branch           @relation(fields: [branchId], references: [id])
+  serviceCategoryId String?
+  serviceCategory   ServiceCategory? @relation(fields: [serviceCategoryId], references: [id])
+  checklist         Json?            @default("[]")
+  bookings          ServiceBooking[]
+}
+
+model ServiceCategory {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  services    Service[]
+  createdAt   DateTime  @default(now())
+}
+
+model ServiceBooking {
+  id             String   @id @default(uuid())
+  customerId     String
+  customer       User     @relation("CustomerBookings", fields: [customerId], references: [id])
+  serviceId      String
+  service        Service  @relation(fields: [serviceId], references: [id])
+  branchId       Int
+  branch         Branch   @relation(fields: [branchId], references: [id])
+  bike_product_id String?
+  booking_date   DateTime
+  booking_time   String
+  status         String   @default("pending") // pending / confirmed / done / cancelled
+  customer_notes String?
+  final_price    Float?
+  partsUsed      Json?
+  stockDeducted  Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  @@index([branchId])
+  @@index([booking_date])
+}
+
+model Supplier {
+  id        Int        @id @default(autoincrement())
+  name      String
+  contact   String
+  purchases Purchase[]
+  accountId String?    @unique
+  account   Account?   @relation("SupplierAccount", fields: [accountId], references: [id])
+
+  @@index([name])
+}
+
+model Purchase {
+  id              Int            @id @default(autoincrement())
+  supplierId      Int
+  supplier        Supplier       @relation(fields: [supplierId], references: [id])
+  branchId        Int
+  branch          Branch         @relation(fields: [branchId], references: [id])
+  total           Float
+  remarks         String?
+  documentNo      String?
+  purchaseNo      String?
+  partyInvoiceNo  String?
+  items           PurchaseItem[]
+  createdAt       DateTime       @default(now())
+
+  @@index([branchId])
+}
+
+model PurchaseItem {
+  id         Int      @id @default(autoincrement())
+  purchaseId Int
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  partId     Int?
+  part       Part?    @relation(fields: [partId], references: [id])
+  productId  String?
+  product    Product? @relation(fields: [productId], references: [id])
+  quantity   Int
+  cost       Float
+  engineNo   String?
+  chassisNo  String?
+  stockType  String?  @default("New")
+}
+model StockAdjustment {
+  id        Int      @id @default(autoincrement())
+  branchId  Int
+  branch    Branch   @relation(fields: [branchId], references: [id])
+  partId    Int
+  part      Part     @relation(fields: [partId], references: [id])
+  quantity  Int      // Positive for In, Negative for Out
+  reason    String?  // e.g. "Manual Update", "Damaged", "Correction"
+  createdAt DateTime @default(now())
+
+  @@index([branchId])
+  @@index([createdAt])
+}
+
+model Testimonial {
+  id         String   @id @default(uuid())
+  name       String
+  role       String?
+  text       String
+  stars      Int      @default(5)
+  isApproved Boolean  @default(true) 
+  createdAt  DateTime @default(now())
+}
+
+model WalkInCustomer {
+  id         String   @id @default(uuid())
+  first_name String
+  last_name  String
+  cnic       String
+  phone      String
+  whatsapp   String?
+  address    String
+  email      String?
+  branchId   Int
+  branch     Branch   @relation(fields: [branchId], references: [id])
+  balance    Float    @default(0) // Total outstanding debit
+  ledger     WalkInCustomerLedger[]
+  orders     Order[]  @relation("WalkInOrders")
+  accountId  String?  @unique
+  account    Account? @relation("CustomerAccount", fields: [accountId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@index([branchId])
+  @@index([phone])
+  @@index([branchId, accountId])
+}
+
+model Bank {
+  id             String   @id @default(uuid())
+  name           String
+  account_title  String
+  account_number String
+  iban           String?
+  branch_name    String?
+  initial_balance Float    @default(0)
+  current_balance Float    @default(0)
+  branchId       Int
+  branch         Branch   @relation(fields: [branchId], references: [id])
+  orders         Order[]
+  createdAt      DateTime @default(now())
+
+  @@index([branchId])
+}
+
+model WalkInCustomerLedger {
+  id               String         @id @default(uuid())
+  customerId       String
+  customer         WalkInCustomer @relation(fields: [customerId], references: [id])
+  amount           Float          // Positive for Debit (Increase Balance), Negative for Credit (Decrease Balance)
+  type             String         // DEBIT or CREDIT
+  description      String?        // e.g. "Invoice #123", "Payment Received"
+  orderId          Int?
+  order            Order?         @relation(fields: [orderId], references: [id])
+  createdAt        DateTime       @default(now())
+
+  @@index([customerId])
+  @@index([createdAt])
+}
+
+model AccountCategory {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  status      String    @default("ACTIVE") // ACTIVE or INACTIVE
+  branchId    Int?      // Nullable for default global categories
+  branch      Branch?   @relation(fields: [branchId], references: [id])
+  accounts    Account[]
+  createdAt   DateTime  @default(now())
+
+  @@index([branchId])
+}
+
+model Account {
+  id              String          @id @default(uuid())
+  categoryId      String
+  category        AccountCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  account_name    String
+  opening_balance Float           @default(0)
+  current_balance Float           @default(0)
+  status          String          @default("ACTIVE") // ACTIVE or INACTIVE
+  branchId        Int
+  branch          Branch          @relation(fields: [branchId], references: [id])
+  ledger          Ledger?
+  fromVouchers    Voucher[]       @relation("FromAccountVouchers")
+  toVouchers      Voucher[]       @relation("ToAccountVouchers")
+  customer        WalkInCustomer? @relation("CustomerAccount")
+  supplier        Supplier?       @relation("SupplierAccount")
+  createdAt       DateTime        @default(now())
+
+  @@index([categoryId])
+  @@index([branchId])
+}
+
+model Ledger {
+  id           String        @id @default(uuid())
+  accountId    String        @unique
+  account      Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  ledger_name  String
+  entries      LedgerEntry[]
+  createdAt    DateTime      @default(now())
+}
+
+model LedgerEntry {
+  id             String   @id @default(uuid())
+  ledgerId       String
+  ledger         Ledger   @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  debit          Float    @default(0)
+  credit         Float    @default(0)
+  reference_type String   @default("OPENING_BALANCE")
+  description    String?
+  createdAt      DateTime @default(now())
+
+  @@index([ledgerId])
+  @@index([createdAt])
+}
+
+model Voucher {
+  id             String         @id @default(uuid())
+  voucher_no     String         @unique
+  voucher_type   String         // PAYMENT, RECEIPT, JOURNAL
+  date           DateTime       @default(now())
+  category       String?        // e.g. Cash, Bank, Sale Party, Owner's Equity
+  to_type        String?        // e.g. Expenses, Purchase, Bank, Cash
+  fromAccountId  String?
+  fromAccount    Account?       @relation("FromAccountVouchers", fields: [fromAccountId], references: [id])
+  toAccountId    String?
+  toAccount      Account?       @relation("ToAccountVouchers", fields: [toAccountId], references: [id])
+  amount         Float
+  ref_no         String?
+  description    String?
+  branchId       Int
+  branch         Branch         @relation(fields: [branchId], references: [id])
+  createdAt      DateTime       @default(now())
+
+  @@index([branchId])
+  @@index([voucher_type])
+  @@index([createdAt])
+}
+
+

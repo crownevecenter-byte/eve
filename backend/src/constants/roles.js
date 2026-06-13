@@ -1,0 +1,48 @@
+/** Canonical role names — use everywhere (backend + frontend). */
+const ROLES = {
+  COMPANY_OWNER: 'COMPANY_OWNER',
+  BRANCH_OWNER: 'BRANCH_OWNER',
+  BRANCH_MANAGER: 'BRANCH_MANAGER',
+  EMPLOYEE: 'EMPLOYEE',
+  TECHNICIAN: 'TECHNICIAN',
+  CUSTOMER: 'CUSTOMER',
+};
+
+/** Legacy alias still stored on some users / UI labels. */
+const ROLE_ALIASES = {
+  MANAGER: ROLES.BRANCH_MANAGER,
+};
+
+const normalizeRole = (role) => ROLE_ALIASES[role] || role;
+
+const BRANCH_SCOPED_ROLES = [
+  ROLES.BRANCH_OWNER,
+  ROLES.BRANCH_MANAGER,
+  ROLES.EMPLOYEE,
+  ROLES.TECHNICIAN,
+];
+
+const STAFF_ROLES = [
+  ROLES.COMPANY_OWNER,
+  ROLES.BRANCH_OWNER,
+  ROLES.BRANCH_MANAGER,
+  ROLES.EMPLOYEE,
+  ROLES.TECHNICIAN,
+];
+
+const BRANCH_DASHBOARD_ROLES = [
+  ROLES.COMPANY_OWNER,
+  ROLES.BRANCH_OWNER,
+  ROLES.BRANCH_MANAGER,
+  ROLES.EMPLOYEE,
+  ROLES.TECHNICIAN,
+];
+
+module.exports = {
+  ROLES,
+  ROLE_ALIASES,
+  normalizeRole,
+  BRANCH_SCOPED_ROLES,
+  STAFF_ROLES,
+  BRANCH_DASHBOARD_ROLES,
+};

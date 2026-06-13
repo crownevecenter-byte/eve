@@ -1,0 +1,98 @@
+name: Master CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # ─── BACKEND JOB ──────────────────────────────────────────────────────────
+  backend:
+    name: Backend (Validate & Deploy)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'backend/package-lock.json'
+
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Prisma Generate (Neon Adapter)
+        working-directory: backend
+        run: npx prisma@6.19.3 generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+
+      - name: Prisma Migrate Deploy
+        working-directory: backend
+        run: |
+          # Try to deploy migrations normally
+          if ! npx prisma@6.19.3 migrate deploy; then
+            echo "⚠️ Normal migrate deploy failed (P3005). Attempting to resolve/baseline..."
+            # Mark existing migrations as applied to fix P3005 sync issues
+            npx prisma@6.19.3 migrate resolve --applied 20260505161753_init || true
+            npx prisma@6.19.3 migrate resolve --applied 20260505170036_add_product_fields || true
+            npx prisma@6.19.3 migrate resolve --applied 20260505170831_add_category_table || true
+            # Try deploy again for any new ones
+            npx prisma@6.19.3 migrate deploy
+          fi
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+
+      - name: Prisma DB Seed
+        working-directory: backend
+        run: npx prisma@6.19.3 db seed
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+
+      - name: Trigger Vercel Deploy (Backend → Vercel)
+        if: github.ref == 'refs/heads/main' && success()
+        env:
+          VERCEL_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$VERCEL_HOOK" ]; then
+            echo "⚠️  VERCEL_DEPLOY_HOOK not set — skipping"
+            exit 0
+          fi
+          curl -f -X POST "$VERCEL_HOOK"
+
+  # ─── FRONTEND JOB ──────────────────────────────────────────────────────────
+  frontend:
+    name: Frontend (Build Check)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          # No npm cache — avoids stale Vite binary cache issues
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: |
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
+          npm install --ignore-scripts
+
+      - name: Build Frontend (Vite)
+        working-directory: frontend
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_R2_PUBLIC_URL: ${{ secrets.VITE_R2_PUBLIC_URL }}

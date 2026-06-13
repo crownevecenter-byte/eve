@@ -1,0 +1,9 @@
+---
+description: Git commit rules for this repo
+alwaysApply: true
+---
+
+When creating git commits in this project:
+
+- Do **not** add `Co-authored-by: Cursor` or any Cursor/agent co-author trailer.
+- Use only the repository author's identity; the commit message should list a single author.

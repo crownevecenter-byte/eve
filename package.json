@@ -1,0 +1,27 @@
+{
+  "name": "crown-eve-center-monorepo",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": ">=20.0.0 <23.0.0"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build": "node scripts/hostinger-build.js",
+    "start": "node backend/index.js",
+    "start:root": "node index.js",
+    "test": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "test:backend": "npm run test --workspace=backend",
+    "test:frontend": "npm run test --workspace=frontend",
+    "test:all": "npm run test:backend && npm run test:frontend && npm run lint --workspace=frontend && npm run build --workspace=frontend"
+  },
+  "dependencies": {
+    "csv-parser": "^3.2.0",
+    "dotenv": "^17.4.2",
+    "pg": "^8.20.0",
+    "uuid": "^14.0.0"
+  }
+}

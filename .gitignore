@@ -1,0 +1,21 @@
+# Both
+node_modules/
+.env
+*.log
+logs/
+backups/
+
+# Frontend
+frontend/dist/
+frontend/.env.local
+
+# Backend
+backend/.env
+backend/config.env
+backend/dist/
+
+# PDF extract output (large binaries — regenerate with npm run parse:catalog)
+processing/images/
+
+# System
+.DS_Store

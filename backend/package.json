@@ -1,0 +1,62 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "node": ">=20.0.0 <23.0.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "postinstall": "npx prisma generate",
+    "dev": "nodemon src/server.js",
+    "build": "npx prisma generate",
+    "seed": "node prisma/seed.js",
+    "parse:catalog": "node scripts/parse-pdf-catalog.js",
+    "seed:products": "node prisma/seed-products.js",
+    "upload:images": "node scripts/upload-catalog-images-r2.js",
+    "upload:images:force": "node scripts/upload-catalog-images-r2.js --force",
+    "link:images": "node prisma/link-product-images.js",
+    "repair:catalog-images": "node scripts/repair-catalog-images.js",
+    "link:images:db": "node scripts/repair-catalog-images.js --link-only",
+    "build:migrate": "npx prisma generate && npx prisma migrate deploy",
+    "vercel-build": "npx prisma generate && npx prisma migrate deploy",
+    "test": "node tests/run.js",
+    "test:unit": "node --test --test-reporter=spec tests/unit/dbConfig.test.js tests/unit/dbConcurrency.test.js tests/unit/httpUnsafePatterns.test.js tests/unit/prismaHttp.test.js",
+    "test:integration": "node tests/run.js",
+    "test:api": "node --test --test-reporter=spec tests/api/health.test.js tests/api/authenticated.test.js",
+    "test:process-load": "node scripts/process-load-sim.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@neondatabase/serverless": "^0.10.4",
+    "@prisma/adapter-neon": "^6.19.3",
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.4.0",
+    "google-auth-library": "^10.7.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "node-cache": "^5.1.2",
+    "nodemailer": "^8.0.7",
+    "prisma": "^6.19.3",
+    "sharp": "^0.34.5",
+    "winston": "^3.19.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
+  }
+}

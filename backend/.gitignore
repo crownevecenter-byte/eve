@@ -1,0 +1,13 @@
+node_modules
+# Keep environment variables out of version control
+.env
+config.env
+
+/generated/prisma
+backups/
+scripts/*
+!scripts/parse-pdf-catalog.js
+!scripts/upload-catalog-images-r2.js
+!scripts/repair-catalog-images.js
+!scripts/r2-upload.js
+!scripts/process-load-sim.js
