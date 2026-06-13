@@ -1,0 +1,21 @@
+/* pos/AddCustomer.css */
+.add-customer-container {
+  animation: fadeInUp 0.3s ease;
+}
+.add-customer-container .customer-avatar {
+  width: 48px;
+  height: 48px;
+  background: #FFFAF8;
+  border: 1px solid #F3E5DC;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #E65100;
+  font-weight: 900;
+  font-size: 18px;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

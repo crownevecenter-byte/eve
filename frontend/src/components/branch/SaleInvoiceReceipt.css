@@ -1,0 +1,476 @@
+/* Sale invoice — thermal paper slip + modal (matches service receipt shell) */
+
+.sale-invoice-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(45, 26, 18, 0.55);
+  backdrop-filter: blur(8px);
+}
+
+.sale-invoice-dialog {
+  width: 100%;
+  max-width: 460px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #f3e5dc;
+  border-radius: 2rem;
+  box-shadow: 0 24px 60px rgba(45, 26, 18, 0.18);
+  overflow: hidden;
+}
+
+.sale-invoice-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 18px;
+  background: #fffaf8;
+  border-bottom: 1px solid #f3e5dc;
+  flex-shrink: 0;
+}
+
+.sale-invoice-title {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #2d1a12;
+}
+
+.sale-invoice-subtitle {
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8d7a71;
+}
+
+.sale-invoice-close-btn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #f3e5dc;
+  border-radius: 999px;
+  background: #fff;
+  color: #8d7a71;
+  cursor: pointer;
+}
+
+.sale-invoice-close-btn:hover {
+  background: #fff6f0;
+  border-color: #e65100;
+  color: #e65100;
+}
+
+.sale-invoice-body {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 20px 20px;
+  background: #f5f5f5;
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d4 transparent;
+}
+
+.sale-invoice-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sale-invoice-body::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 999px;
+}
+
+.sale-invoice-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 20px 22px;
+  background: #fffaf8;
+  border-top: 1px solid #f3e5dc;
+  flex-shrink: 0;
+}
+
+.sale-invoice-btn {
+  min-width: 130px;
+  height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sale-invoice-btn--ghost {
+  border: 1.5px solid #e8ddd6;
+  background: #fff;
+  color: #2d1a12;
+}
+
+.sale-invoice-btn--ghost:hover {
+  background: #fffaf8;
+}
+
+.sale-invoice-btn--print {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  background: linear-gradient(135deg, #e65100 0%, #c73a08 100%);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(230, 81, 0, 0.28);
+}
+
+.sale-invoice-btn--print:hover {
+  filter: brightness(1.03);
+}
+
+/* ── Thermal slip (80mm paper look) ── */
+.sale-thermal-slip {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 20px 18px 22px;
+  background: #fff;
+  color: #111;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: left;
+  border: 1px solid #ddd;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.sale-thermal-serration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background:
+    linear-gradient(-135deg, #f5f5f5 4px, transparent 0),
+    linear-gradient(135deg, #f5f5f5 4px, transparent 0);
+  background-size: 8px 8px;
+  pointer-events: none;
+}
+
+.sale-thermal-center {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.sale-thermal-brand {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #000;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.sale-thermal-brand-sub {
+  font-size: 8px;
+  color: #444;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+  font-family: system-ui, -apple-system, sans-serif;
+  word-break: break-word;
+}
+
+.sale-thermal-divider {
+  border-bottom: 1px dashed #999;
+  margin: 12px 0;
+}
+
+.sale-thermal-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 10px 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.sale-thermal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+  margin: 10px 0;
+}
+
+.sale-thermal-grid > div {
+  min-width: 0;
+}
+
+.sale-thermal-label {
+  display: block;
+  font-size: 8px;
+  font-weight: 800;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 2px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.sale-thermal-value {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+.sale-thermal-sub {
+  display: block;
+  font-size: 9px;
+  color: #555;
+  margin-top: 1px;
+  text-transform: none;
+}
+
+.sale-thermal-mono {
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: none;
+}
+
+.sale-thermal-bold {
+  font-weight: 900;
+}
+
+.sale-thermal-section-label {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+  margin-bottom: 8px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.sale-thermal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  table-layout: fixed;
+}
+
+.sale-thermal-table th:nth-child(1),
+.sale-thermal-table td:nth-child(1) {
+  width: 28px;
+}
+
+.sale-thermal-table th:nth-child(2),
+.sale-thermal-table td:nth-child(2) {
+  width: auto;
+  padding-right: 8px;
+}
+
+.sale-thermal-table th:nth-child(3),
+.sale-thermal-table td:nth-child(3) {
+  width: 68px;
+}
+
+.sale-thermal-table th {
+  text-align: left;
+  padding-bottom: 6px;
+  font-size: 8px;
+  font-weight: 800;
+  color: #666;
+  text-transform: uppercase;
+  border-bottom: 1px solid #ccc;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.sale-thermal-table th:last-child {
+  text-align: right;
+}
+
+.sale-thermal-table td {
+  padding: 8px 0;
+  vertical-align: top;
+  border-bottom: 1px dotted #ddd;
+}
+
+.sale-thermal-qty {
+  width: 28px;
+  color: #333;
+  font-weight: 700;
+}
+
+.sale-thermal-item {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.sale-thermal-item-name {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 9px;
+  line-height: 1.35;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.sale-thermal-item-rate {
+  font-size: 8px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.sale-thermal-line-total {
+  text-align: right;
+  font-weight: 700;
+  font-size: 9px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.sale-thermal-total-box {
+  margin-top: 14px;
+  padding: 12px 12px 14px;
+  border: 1px dashed #999;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.sale-thermal-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #333;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.4;
+}
+
+.sale-thermal-total-row span:last-child {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.sale-thermal-total-row--grand {
+  margin-top: 0;
+  padding-top: 10px;
+  padding-bottom: 0;
+  border-top: 1px solid #ccc;
+  font-weight: 900;
+  font-size: 10px;
+  color: #000;
+}
+
+.sale-thermal-grand {
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.sale-thermal-footer {
+  text-align: center;
+  margin-top: 8px;
+  padding-bottom: 4px;
+}
+
+.sale-thermal-thanks {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.sale-thermal-disclaimer {
+  font-size: 8px;
+  color: #666;
+  margin-top: 6px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  .sale-thermal-slip,
+  .sale-thermal-slip *,
+  .bike-a4-invoice,
+  .bike-a4-invoice * {
+    visibility: visible !important;
+  }
+
+  .sale-invoice-overlay {
+    position: static;
+    padding: 0;
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .sale-invoice-dialog {
+    max-width: none;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .sale-invoice-header,
+  .sale-invoice-footer {
+    display: none !important;
+  }
+
+  .sale-invoice-body {
+    padding: 0;
+    background: #fff;
+    overflow: visible;
+  }
+
+  .sale-thermal-slip {
+    position: fixed !important;
+    left: 50% !important;
+    top: 0 !important;
+    transform: translateX(-50%) !important;
+    max-width: 72mm !important;
+    width: 72mm !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 4mm 3mm !important;
+    margin: 0 !important;
+    z-index: 99999 !important;
+  }
+
+  .sale-thermal-serration {
+    display: none;
+  }
+}

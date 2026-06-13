@@ -1,0 +1,297 @@
+.search-field {
+  --search-primary: #e8470a;
+  position: relative;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Undo legacy wrapper classes (e.g. .fsearch) that squish the field */
+.search-field.fsearch,
+.fsearch.search-field {
+  display: block;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin-left: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  gap: 0;
+}
+
+.search-field-input {
+  display: block;
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 0 48px 0 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #0f172a;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  appearance: none;
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, outline 0.2s ease, padding 0.2s ease;
+}
+
+.search-field-input::placeholder {
+  color: transparent;
+}
+
+.search-field-input:hover:not(:focus):not(:disabled) {
+  border-color: #cbd5e1;
+}
+
+.search-field-input:focus {
+  border-color: transparent;
+  outline: 2px solid var(--search-primary);
+  outline-offset: 0;
+}
+
+.search-field-input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  background: #f8fafc;
+}
+
+/* Room for floated label — typed text sits below, no overlap */
+.search-field:focus-within .search-field-input,
+.search-field.has-value .search-field-input {
+  padding-top: 22px;
+  padding-bottom: 8px;
+  color: #0f172a;
+  caret-color: #0f172a;
+}
+
+.search-field-label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--search-primary);
+  background: #fff;
+  padding: 0 4px;
+  margin: 0;
+  pointer-events: none;
+  transition: top 0.2s ease, transform 0.2s ease, font-size 0.2s ease;
+  transform-origin: left center;
+  z-index: 2;
+  max-width: calc(100% - 64px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.search-field:focus-within .search-field-label,
+.search-field.has-value .search-field-label {
+  top: 9px;
+  transform: translateY(0) scale(0.72);
+}
+
+.search-field-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #cbd5e1;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.search-field-clear {
+  position: absolute;
+  top: 50%;
+  right: 44px;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 3;
+}
+
+.search-field-clear:hover {
+  color: var(--search-primary);
+}
+
+/* ── Variants ── */
+.search-field--pos .search-field-input {
+  height: auto;
+  min-height: 52px;
+  padding: 16px 48px 16px 16px;
+  background: #fffaf8;
+  border-color: #f3e5dc;
+  border-radius: 1rem;
+  font-weight: 600;
+  color: #2d1a12;
+}
+
+.search-field--pos:focus-within .search-field-input,
+.search-field--pos.has-value .search-field-input {
+  padding-top: 26px;
+  padding-bottom: 10px;
+  color: #2d1a12;
+  caret-color: #2d1a12;
+}
+
+.search-field--pos .search-field-label {
+  background: #fffaf8;
+}
+
+.search-field--pos .search-field-input:focus {
+  outline-color: #e65100;
+  box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.12);
+}
+
+.search-field--pos.search-field--pill .search-field-input {
+  border-radius: 9999px;
+}
+
+.search-field--pos.search-field--pill .search-field-label {
+  background: #fffaf8;
+}
+
+.search-field--dark {
+  --search-primary: #fb923c;
+}
+
+.search-field--dark .search-field-input {
+  background: #0f172a;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+
+.search-field--dark:focus-within .search-field-input,
+.search-field--dark.has-value .search-field-input {
+  color: #f8fafc;
+  caret-color: #f8fafc;
+}
+
+.search-field--dark .search-field-label {
+  background: #0f172a;
+  color: var(--search-primary);
+}
+
+.search-field--dark .search-field-input:focus {
+  outline-color: var(--search-primary);
+}
+
+.search-field--compact .search-field-input {
+  height: 42px;
+  font-size: 13px;
+}
+
+.search-field--compact:focus-within .search-field-input,
+.search-field--compact.has-value .search-field-input {
+  padding-top: 18px;
+  padding-bottom: 6px;
+}
+
+.search-field--compact .search-field-label {
+  font-size: 13px;
+}
+
+.search-field--compact .search-field-icon {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.search-field--compact .search-field-clear {
+  right: 40px;
+}
+
+/* ── Override global portal input/label rules (branch, owner, customer shells) ── */
+.branch-page .search-field .search-field-input,
+#branch-dashboard-shell .search-field .search-field-input,
+#owner-dashboard-shell .search-field .search-field-input,
+.page .search-field .search-field-input,
+#customer-dashboard-shell .search-field .search-field-input {
+  width: 100%;
+  height: 50px;
+  min-height: 50px;
+  padding: 0 48px 0 16px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #0f172a;
+  font-size: 14px;
+  font-family: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.branch-page .search-field:focus-within .search-field-input,
+.branch-page .search-field.has-value .search-field-input,
+#branch-dashboard-shell .search-field:focus-within .search-field-input,
+#branch-dashboard-shell .search-field.has-value .search-field-input,
+#owner-dashboard-shell .search-field:focus-within .search-field-input,
+#owner-dashboard-shell .search-field.has-value .search-field-input,
+.page .search-field:focus-within .search-field-input,
+.page .search-field.has-value .search-field-input,
+#customer-dashboard-shell .search-field:focus-within .search-field-input,
+#customer-dashboard-shell .search-field.has-value .search-field-input {
+  padding-top: 22px;
+  padding-bottom: 8px;
+}
+
+.branch-page .search-field .search-field-label,
+#branch-dashboard-shell .search-field .search-field-label,
+#owner-dashboard-shell .search-field .search-field-label,
+.page .search-field .search-field-label,
+#customer-dashboard-shell .search-field .search-field-label {
+  display: block;
+  margin-bottom: 0;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  color: var(--search-primary);
+}
+
+#owner-dashboard-shell .search-field--dark .search-field-input,
+#branch-dashboard-shell .search-field--dark .search-field-input {
+  background: #0f172a;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+
+.branch-page .search-field--pos .search-field-input,
+#branch-dashboard-shell .search-field--pos .search-field-input {
+  height: auto;
+  min-height: 52px;
+  padding: 16px 48px 16px 16px;
+  background: #fffaf8;
+  border-color: #f3e5dc;
+  border-radius: 1rem;
+  color: #2d1a12;
+}
+
+.branch-page .search-field--pos:focus-within .search-field-input,
+.branch-page .search-field--pos.has-value .search-field-input,
+#branch-dashboard-shell .search-field--pos:focus-within .search-field-input,
+#branch-dashboard-shell .search-field--pos.has-value .search-field-input {
+  padding-top: 26px;
+  padding-bottom: 10px;
+}
+
+.branch-page .search-field--pos .search-field-label,
+#branch-dashboard-shell .search-field--pos .search-field-label {
+  background: #fffaf8;
+}

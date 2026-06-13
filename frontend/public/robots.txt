@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow crawling of internal dashboard paths
+Disallow: /owner/
+Disallow: /branch/
+Disallow: /my/
+
+Sitemap: https://crownevecenter.com/sitemap.xml

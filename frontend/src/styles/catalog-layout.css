@@ -1,0 +1,132 @@
+/* Catalog grid — reserve space & skeletons to prevent layout shift (CLS) */
+
+.products-grid.three-cols.products-grid--loading,
+.products-grid.three-cols.products-grid--reserved {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 1100px) {
+  .products-grid.three-cols.products-grid--loading,
+  .products-grid.three-cols.products-grid--reserved {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .products-grid.three-cols.products-grid--loading,
+  .products-grid.three-cols.products-grid--reserved {
+    grid-template-columns: 1fr;
+  }
+}
+
+#products {
+  min-height: 520px;
+}
+
+.products-grid--reserved {
+  min-height: 420px;
+}
+
+@media (min-width: 768px) {
+  .products-grid--reserved {
+    min-height: 520px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .products-grid--reserved {
+    min-height: 580px;
+  }
+}
+
+.product-card-img {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  min-height: 180px;
+  overflow: hidden;
+}
+
+.product-card-img .bike-main-img,
+.product-card-img img.bike-main-img,
+.product-card-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .product-card-img {
+    min-height: 200px;
+  }
+
+  .product-card-img .bike-main-img,
+  .product-card-img img {
+    min-height: 120px;
+  }
+}
+
+.product-card-img .placeholder-img {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted2, #9ca3af);
+}
+
+/* Skeleton cards */
+.catalog-card-skeleton {
+  pointer-events: none;
+  min-height: 320px;
+}
+
+.catalog-img-skeleton {
+  background: linear-gradient(110deg, #f3f4f6 8%, #e5e7eb 18%, #f3f4f6 33%);
+  background-size: 200% 100%;
+  animation: catalog-shimmer 1.4s ease-in-out infinite;
+}
+
+.catalog-body-skeleton {
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.catalog-skeleton-line {
+  display: block;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(110deg, #f3f4f6 8%, #e5e7eb 18%, #f3f4f6 33%);
+  background-size: 200% 100%;
+  animation: catalog-shimmer 1.4s ease-in-out infinite;
+}
+
+.catalog-skeleton-line--short {
+  width: 40%;
+  height: 10px;
+}
+
+.catalog-skeleton-line--price {
+  width: 55%;
+  height: 18px;
+  margin-top: 4px;
+}
+
+@keyframes catalog-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Ready to Ride booking video — full layout in index.css */

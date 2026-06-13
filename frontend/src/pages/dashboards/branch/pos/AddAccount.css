@@ -1,0 +1,54 @@
+/* frontend/src/pages/dashboards/branch/pos/AddAccount.css */
+
+.add-account-view-container {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #f3e5dc;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #e65100/40;
+}
+
+/* Category cards hover micro-animation */
+.add-account-view-container .lg\:w-1\/3 .overflow-y-auto > div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px rgba(230, 81, 0, 0.1);
+}
+
+/* Input styles focus transition */
+.add-account-view-container input,
+.add-account-view-container textarea,
+.add-account-view-container select {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.add-account-view-container input:focus,
+.add-account-view-container textarea:focus,
+.add-account-view-container select:focus {
+  border-color: #e65100;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(230, 81, 0, 0.08);
+}

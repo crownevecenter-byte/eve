@@ -1,0 +1,166 @@
+/* Uiverse-style neumorphic cards — javierBarroso, scoped to customer portal */
+
+#customer-dashboard-shell {
+  --ce-neu-bg: #ffffff;
+  --ce-neu-bg-soft: #f8f9fb;
+}
+
+#customer-dashboard-shell .card,
+#customer-dashboard-shell .stat,
+#customer-dashboard-shell .quick-action-card,
+#customer-dashboard-shell .ce-shop .bike-card-new,
+#customer-dashboard-shell .ce-dashboard-bikes .bike-card-new,
+#customer-dashboard-shell .ce-order-card,
+#customer-dashboard-shell .cart-item-card-ultra,
+#customer-dashboard-shell .summary-card-ultra {
+  background: #ffffff !important;
+  border: 1px solid #eceef2 !important;
+  border-radius: 20px !important;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+#customer-dashboard-shell .card:hover,
+#customer-dashboard-shell .stat:hover,
+#customer-dashboard-shell .quick-action-card:hover,
+#customer-dashboard-shell .ce-shop .bike-card-new:hover,
+#customer-dashboard-shell .ce-dashboard-bikes .bike-card-new:hover,
+#customer-dashboard-shell .ce-order-card:hover,
+#customer-dashboard-shell .cart-item-card-ultra:hover,
+#customer-dashboard-shell .summary-card-ultra:hover {
+  transform: translateY(-3px);
+  border-color: rgba(232, 71, 10, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(232, 71, 10, 0.1) !important;
+}
+
+#customer-dashboard-shell .stat::before,
+#customer-dashboard-shell .quick-action-card::before {
+  display: none !important;
+}
+
+#customer-dashboard-shell .stat {
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+
+#customer-dashboard-shell .stat-content {
+  padding: 8px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+#customer-dashboard-shell .quick-action-card {
+  padding: 0 0 20px !important;
+  border-left: none !important;
+  gap: 10px !important;
+}
+
+#customer-dashboard-shell .quick-action-card .quick-action-label {
+  padding: 0 14px;
+  color: #333;
+  font-weight: 700;
+}
+
+#customer-dashboard-shell .quick-action-card .quick-action-chevron {
+  color: var(--orange);
+}
+
+#customer-dashboard-shell .ce-shop .bike-card-new .product-card-img,
+#customer-dashboard-shell .ce-dashboard-bikes .bike-card-new .product-card-img {
+  background: var(--ce-neu-bg-soft);
+  border-bottom: 1px solid #eceef2;
+}
+
+#customer-dashboard-shell .ce-shop .bike-card-new .product-card-body,
+#customer-dashboard-shell .ce-dashboard-bikes .bike-card-new .product-card-body {
+  background: transparent;
+}
+
+#customer-dashboard-shell .ce-neu-marquee {
+  position: relative;
+  height: 52px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f1f4;
+}
+
+#customer-dashboard-shell .ce-neu-marquee-track {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300%;
+  height: 100%;
+  transform: translateX(0%);
+  animation: ce-neu-marquee-anim 6s infinite cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+#customer-dashboard-shell .ce-neu-marquee-word {
+  width: 33.33%;
+  text-align: center;
+  color: #333;
+  font-size: 22px;
+  font-weight: 600;
+  text-shadow: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 10px;
+  line-height: 52px;
+}
+
+#customer-dashboard-shell .ce-neu-marquee--sm {
+  height: 44px;
+}
+
+#customer-dashboard-shell .ce-neu-marquee--sm .ce-neu-marquee-word {
+  font-size: 15px;
+  line-height: 44px;
+}
+
+#customer-dashboard-shell .ce-neu-marquee--xs .ce-neu-marquee-word {
+  font-size: 12px;
+}
+
+#customer-dashboard-shell .ce-order-card {
+  padding: 0 !important;
+}
+
+#customer-dashboard-shell .ce-order-card-body {
+  padding: 14px 16px 16px;
+}
+
+#customer-dashboard-shell .card:has(.ce-neu-marquee) {
+  padding: 0 !important;
+}
+
+#customer-dashboard-shell .card-neu-body {
+  padding: 0 24px 24px;
+}
+
+@keyframes ce-neu-marquee-anim {
+  0%,
+  20% {
+    transform: translateX(0%);
+  }
+
+  30%,
+  70% {
+    transform: translateX(-33.33%);
+  }
+
+  80%,
+  100% {
+    transform: translateX(-66.66%);
+  }
+}
+
+@media (max-width: 600px) {
+  #customer-dashboard-shell .ce-neu-marquee-word {
+    font-size: 16px;
+  }
+}
