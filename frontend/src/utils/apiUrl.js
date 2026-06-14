@@ -1,7 +1,7 @@
 // Centralized API URL.
 // Default: Hostinger API directly. On QUIC/network failures, fall back to www → Vercel proxy.
 
-export const DIRECT_API = 'https://api.crownevcenter.com/api';
+export const DIRECT_API = 'https://server-production-52a6b.up.railway.app/api';
 const STORAGE_KEY = 'crown_api_base';
 
 export const getProxiedApiUrl = () => {
@@ -64,7 +64,7 @@ export const isMisroutedProxyResponse = (response, config) => {
 export const shouldRetryViaProxy = (error, config) => {
   if (!config || config.__apiFallback || !isCrownProductionSite()) return false;
   const base = config.baseURL || '';
-  const onDirect = base.includes('api.crownevcenter.com');
+  const onDirect = base.includes('railway.app');
   const onProxy = base.startsWith(`${window.location.origin}/api`);
 
   if (onDirect && isNetworkTransportError(error)) {
@@ -93,7 +93,7 @@ export const isNetworkTransportError = (err) => {
 export const getApiFallbackUrl = (currentBase) => {
   if (!currentBase || typeof window === 'undefined') return null;
   // Production site: only fall back to same-origin proxy (never cross-origin direct).
-  if (currentBase.includes('api.crownevcenter.com') && isCrownProductionSite()) {
+  if (currentBase.includes('railway.app') && isCrownProductionSite()) {
     setApiBasePreference('proxy');
     return getProxiedApiUrl();
   }
