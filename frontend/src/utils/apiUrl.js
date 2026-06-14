@@ -40,9 +40,9 @@ export const getApiUrl = () => {
   }
 
   if (import.meta.env.MODE === 'production' && typeof window !== 'undefined') {
-    // Same-origin /api proxy — no CORS, Vercel rewrites to Hostinger API.
+    // Production site: call Railway API directly (Vercel /api proxy returns 502 to external backends).
     if (isCrownProductionSite()) {
-      return getProxiedApiUrl();
+      return DIRECT_API;
     }
     return `${window.location.origin}/api`;
   }

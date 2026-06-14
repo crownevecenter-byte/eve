@@ -34,6 +34,6 @@ describe('apiUrl helpers', () => {
   });
 
   it('exposes production API constant', () => {
-    expect(DIRECT_API).toContain('api.crownevcenter.com');
+    expect(DIRECT_API).toContain('railway.app');
   });
 });
